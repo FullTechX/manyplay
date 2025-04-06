@@ -2,6 +2,15 @@
   "name": "manyplay",
   "module": "src/index.ts",
   "type": "module",
+  "author": "owariz",
+  "version": "0.0.1",
+  "contributors": [
+    {
+      "name": "owariz",
+      "email": "panitthapwon@gmail.com",
+      "github": "github.com/owariz"
+    }
+  ],
   "scripts": {
     "build": "bun build src/index.ts --outdir=dist --minify",
     "dev": "nodemon --exec bun run src/index.ts --watch src",
@@ -15,6 +24,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "discord.js": "^14.18.0",
     "lavalink-client": "^2.5.0"
   }
