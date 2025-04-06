@@ -18,20 +18,20 @@ export default {
         try {
             const member = interaction.member as GuildMember;
             const voiceChannel = member.voice.channel;
-            if (!voiceChannel) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> คุณต้องอยู่ในช่องเสียงก่อน!**` }] });
+            if (!voiceChannel) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.user.id}> คุณต้องอยู่ในช่องเสียงก่อน!**` }] });
             
             const query = interaction.options.get("query")?.value as string;
-            if (!query) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> กรุณาระบุชื่อเพลงหรือ URL!**` }] });
+            if (!query) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.user.id}> กรุณาระบุชื่อเพลงหรือ URL!**` }] });
     
             const player = await getOrCreatePlayer(interaction.guild!.id, voiceChannel.id, interaction.channel!.id);
 
-            await player.connect();
             const result = await player.search({ query }, interaction.user);
-            if (!result.tracks.length) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> ไม่พบเพลงที่คุณค้นหา!**` }] });
+            if (!result.tracks.length) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.user.id}> ไม่พบเพลงที่คุณค้นหา!**` }] });
     
             const track = result.tracks[0];
-            if (!track) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> ไม่พบเพลงที่คุณค้นหา!**` }] });
+            if (!track) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.user.id}> ไม่พบเพลงที่คุณค้นหา!**` }] });
             
+            await player.connect();
             await player.queue.add(track);
 
             if (!player.playing && !player.paused) await player.play(track as any);
@@ -56,7 +56,6 @@ export default {
                 embeds: [embed],
             });
         } catch (error) {
-            console.error("เกิดข้อผิดพลาดในคำสั่ง /play:", error);
             if (interaction.deferred || interaction.replied) {
                 await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> เกิดข้อผิดพลาดขณะดำเนินการคำสั่ง กรุณาลองใหม่อีกครั้ง!**` }] });
             } else {

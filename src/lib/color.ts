@@ -47,11 +47,11 @@ export const colors = {
 export const logger = {
     log: (message: string) => console.log(message),
     
-    info: (message: string) => console.log(`${colors.cyan}${message}${colors.reset}`),
+    info: (message: string) => console.info(`${colors.cyan}${message}${colors.reset}`),
     
-    warn: (message: string) => console.log(`${colors.yellow}${message}${colors.reset}`),
+    warn: (message: string) => console.warn(`${colors.yellow}${message}${colors.reset}`),
     
-    error: (message: string) => console.log(`${colors.red}${message}${colors.reset}`),
+    error: (message: string) => console.error(`${colors.red}${message}${colors.reset}`),
     
     success: (message: string) => console.log(`${colors.green}${message}${colors.reset}`),
     

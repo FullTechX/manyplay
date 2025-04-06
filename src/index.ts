@@ -41,7 +41,7 @@ client.once("ready", async () => {
     for (const file of commandFiles) {
         const command = require(join(commandsPath, file)).default as SlashCommand;
         if (!command?.data || !command?.execute) {
-            logger.warn(`[COMMAND] คำสั่ง ${file} ไม่ถูกต้อง`);
+            logger.error(`[COMMAND] คำสั่ง ${file} ไม่ถูกต้อง`);
             continue;
         }
 
