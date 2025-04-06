@@ -1,6 +1,8 @@
 import { Client } from "discord.js";
 import { LavalinkManager } from "lavalink-client";
 
+import { logger } from "@/lib/color";
+
 export const lavalink = new LavalinkManager({
     nodes: [
         {
@@ -22,13 +24,13 @@ let client: Client;
 
 export async function setupLavalink(discordClient: Client) {
     client = discordClient;
-    console.log('Lavalink Manager setup completed');
+    logger.success('[LAVALINK] Lavalink Manager setup completed');
 
     client.on("ready", async () => {
         try {
             await lavalink.init(client.user?.id! as any);
         } catch (error) {
-            console.error("❌ Error connecting Lavalink node:", error);
+            logger.error(`[LAVALINK] Error connecting Lavalink node: ${error}`);
         }
     });
 }

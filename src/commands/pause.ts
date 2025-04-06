@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, CommandInteraction, GuildMember } from "discord.js";
-import { getOrCreatePlayer } from "@/lib/player";;
+import { getOrCreatePlayer } from "@/lib/player";
 
 export default {
     data: new SlashCommandBuilder()

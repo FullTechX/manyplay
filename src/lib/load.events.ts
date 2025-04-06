@@ -2,6 +2,8 @@ import { Client } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
 
+import { logger } from "@/lib/color";
+
 export async function loadEvents(client: Client) {
     const eventsPath = join(__dirname, "../events");
     const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith(".ts") || file.endsWith(".js"));
@@ -12,7 +14,7 @@ export async function loadEvents(client: Client) {
             const event = eventModule.default;
 
             if (!event || !event.name || !event.execute) {
-                console.warn(`! ข้ามไฟล์ ${file} เพราะไม่มี structure ที่ถูกต้อง`);
+                logger.warn(`[EVENT] ข้ามไฟล์ ${file} เพราะไม่มี structure ที่ถูกต้อง`);
                 continue;
             }
 
@@ -22,11 +24,11 @@ export async function loadEvents(client: Client) {
                 client.on(event.name, (...args) => event.execute(...args));
             }
 
-            console.log(`โหลด event: ${event.name}`);
+            logger.info(`[EVENT] โหลด event: ${event.name}`);
         } catch (err) {
-            console.error(`!!!โหลด event ล้มเหลว: ${file}`, err);
+            logger.error(`[EVENT] โหลด event ล้มเหลว: ${file} error: ${err}`);
         }
     }
 
-    console.log(`Loaded ${eventFiles.length} events`);
+    logger.success(`[EVENT] Loaded ${eventFiles.length} events`);
 }

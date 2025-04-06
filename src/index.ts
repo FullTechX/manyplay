@@ -1,10 +1,12 @@
 import { Client, Collection, GatewayIntentBits, CommandInteraction } from "discord.js";
 import { readdirSync } from "fs";
-import { join } from "path";
-import { setupLavalink } from "@/lib/lavalink";
-import { setupAutoDisconnectListeners } from "@/lib/player"
+import { join } from "path"
+
+import { logger } from "./lib/color";
 import { loadEvents } from "@/lib/load.events";
+import { setupLavalink } from "@/lib/lavalink";
 import type { SlashCommand } from "@/types/command";
+import { setupAutoDisconnectListeners } from "@/lib/player"
 
 const client = new Client({
     intents: [
@@ -25,14 +27,10 @@ await setupAutoDisconnectListeners();
 
 client.once("ready", async () => {
     const GUILD_ID = process.env.DISCORD_GUILD_ID as string;
-    if (!GUILD_ID) {
-        console.error("กรุณาระบุ GUILD_ID ใน .env!");
-        process.exit(1);
-    }
 
     const guild = client.guilds.cache.get(GUILD_ID);
     if (!guild) {
-        console.error(`ไม่พบ Guild ที่มี ID: ${GUILD_ID}`);
+        logger.error(`[BOT] ไม่พบ Guild ที่มี ID: ${GUILD_ID}`);
         process.exit(1);
     }
 
@@ -43,7 +41,7 @@ client.once("ready", async () => {
     for (const file of commandFiles) {
         const command = require(join(commandsPath, file)).default as SlashCommand;
         if (!command?.data || !command?.execute) {
-            console.warn(`⚠️ คำสั่ง ${file} ไม่ถูกต้อง`);
+            logger.warn(`[COMMAND] คำสั่ง ${file} ไม่ถูกต้อง`);
             continue;
         }
 
@@ -56,13 +54,13 @@ client.once("ready", async () => {
             const existingCommand = guild.commands.cache.find(c => c.name === command.name);
             if (existingCommand) {
                 await existingCommand.edit(command as any);
-                console.log(`✅ update ${command.name} in Guild ${GUILD_ID}`);
+                logger.success(`[COMMAND] update ${command.name} in Guild ${GUILD_ID}`);
             } else {
                 await guild.commands.create(command);
-                console.log(`✅ add ${command.name} in Guild ${GUILD_ID}`);
+                logger.success(`[COMMAND] add ${command.name} in Guild ${GUILD_ID}`);
             }
         } catch (error) {
-            console.error(`error add and update command ${command.name}:`, error);
+            logger.error(`[COMMAND] error add and update command ${command.name}: ${error}`);
         }
     }));
 });
@@ -74,10 +72,10 @@ client.on("interactionCreate", async (interaction) => {
     if (!command) return;
 
     try {
-        console.log(`📥 ${interaction.user.tag} ใช้คำสั่ง /${interaction.commandName}`);
+        logger.info(`[USER] ${interaction.user.tag} ใช้คำสั่ง /${interaction.commandName}`);
         await command.execute(interaction as CommandInteraction);
     } catch (error) {
-        console.error(`❌ คำสั่ง /${interaction.commandName} มีปัญหา:`, error);
+        logger.error(`[USER] คำสั่ง /${interaction.commandName} มีปัญหา: ${error}`);
         await interaction.reply({ content: "เกิดข้อผิดพลาดในการใช้คำสั่งนี้", ephemeral: true });
     }
 });
