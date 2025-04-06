@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, CommandInteraction, GuildMember, EmbedBuilder } from "discord.js";
-import { Player, type Track, type UnresolvedTrack } from "lavalink-client";
 import { getOrCreatePlayer } from "@/lib/player";;
 
 export default {
@@ -24,18 +23,17 @@ export default {
             const query = interaction.options.get("query")?.value as string;
             if (!query) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> กรุณาระบุชื่อเพลงหรือ URL!**` }] });
     
-            const player: Player = await getOrCreatePlayer(interaction.guild!.id, voiceChannel.id, interaction.channel!.id);
+            const player = await getOrCreatePlayer(interaction.guild!.id, voiceChannel.id, interaction.channel!.id);
 
             await player.connect();
             const result = await player.search({ query }, interaction.user);
             if (!result.tracks.length) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> ไม่พบเพลงที่คุณค้นหา!**` }] });
     
-            const track = result.tracks[0] as Track | UnresolvedTrack;
+            const track = result.tracks[0];
             if (!track) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> ไม่พบเพลงที่คุณค้นหา!**` }] });
             
             await player.queue.add(track);
 
-            // if (!player.connected) await player.connect();
             if (!player.playing && !player.paused) await player.play(track as any);
 
             const sourceName = track.info.sourceName as string;

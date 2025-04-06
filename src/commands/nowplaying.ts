@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, CommandInteraction, GuildMember, EmbedBuilder } from "discord.js";
-import { Player, type Track } from "lavalink-client";
 import { getOrCreatePlayer } from "@/lib/player";;
 
 export default {
@@ -14,16 +13,15 @@ export default {
         const voiceChannel = member.voice.channel;
         if (!voiceChannel) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> คุณต้องอยู่ในช่องเสียงก่อน!**` }] });
 
-        const player: Player = await getOrCreatePlayer(interaction.guild!.id, voiceChannel.id, interaction.channel!.id);
+        const player = await getOrCreatePlayer(interaction.guild!.id, voiceChannel.id, interaction.channel!.id);
 
         try {
-            const currentTrack = player.queue.current as Track;
+            const currentTrack = player.queue.current;
             if (!currentTrack) return await interaction.editReply({ embeds: [{ color: 0xFF0000, description: `**<@${interaction.client.user?.id}> ไม่มีเพลงที่กำลังเล่นอยู่!**` }] });
 
             const sourceName = currentTrack.info.sourceName as string;
             const formattedSourceName = sourceName.charAt(0).toUpperCase() + sourceName.slice(1);
 
-            console.log(currentTrack.pluginInfo);
             const embed = new EmbedBuilder()
                 .setColor("#FF0000")
                 .setTitle(`🎶 ${currentTrack.info.title}`)
