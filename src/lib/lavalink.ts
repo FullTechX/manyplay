@@ -29,6 +29,7 @@ export async function setupLavalink(discordClient: Client) {
     client.on("ready", async () => {
         try {
             await lavalink.init(client.user?.id! as any);
+            logger.success("[LAVALINK] Connected to Lavalink nodes");
         } catch (error) {
             logger.error(`[LAVALINK] Error connecting Lavalink node: ${error}`);
         }
