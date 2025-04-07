@@ -53,18 +53,18 @@ export async function checkEnvFile(filePath: string = '.env', requiredVars: stri
         logger.warn(`[ENV] พบไฟล์ .env ที่ ${path.resolve(filePath)}`);
         logger.warn(`[ENV] พบตัวแปรทั้งหมด ${Object.keys(envVars).length} ตัว`);
         
-        logger.warn('\n[ENV] รายงานสถานะตัวแปร:');
-        for (const [key, value] of Object.entries(envVars)) {
-            if (value === null) {
-                logger.error(`[ENV] ${key}: ไม่มีค่ากำหนด`);
-            } else {
-                const displayValue = value.length > 20 ? value.substring(0, 20) + '...' : value;
-                logger.info(`[ENV] ${key}: ${displayValue}`);
-            }
-        }
+        // logger.warn('\n[ENV] รายงานสถานะตัวแปร:');
+        // for (const [key, value] of Object.entries(envVars)) {
+        //     if (value === null) {
+        //         logger.error(`[ENV] ${key}: ไม่มีค่ากำหนด`);
+        //     } else {
+        //         const displayValue = value.length > 20 ? value.substring(0, 20) + '...' : value;
+        //         logger.info(`[ENV] ${key}: ${displayValue}`);
+        //     }
+        // }
         
         if (requiredVars.length > 0) {
-            logger.warn('\n[ENV] ตรวจสอบตัวแปรที่จำเป็น:');
+            logger.warn('[ENV] ตรวจสอบตัวแปรที่จำเป็น');
         
             if (missingVars.length > 0) {
                 logger.error(`[ENV] ไม่พบตัวแปรที่จำเป็น: ${missingVars.join(', ')}`);

@@ -103,7 +103,6 @@ export const setupDisconnectTimer = (player: Player) => {
     disconnectTimers.set(guildId, timer);
 };
 
-
 export const setupAutoDisconnectListeners = () => {
     lavalink.on('trackStart', (player) => {
         updatePlayerMetadata(player);

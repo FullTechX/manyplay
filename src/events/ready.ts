@@ -8,7 +8,7 @@ export default {
     name: "ready",
     once: true,
     async execute(client: Client) {
-        await checkEnvFile(".env", ["TOKEN", "DISCORD_CLIENT_ID", "DISCORD_GUILD_ID", "LAVALINK_ID", "LAVALINK_HOST", "LAVALINK_PORT", "LAVALINK_PASSWORD"]);
+        await checkEnvFile(".env", ["TOKEN", "DISCORD_CLIENT_ID", "DISCORD_GUILD_ID"]);
         
         await client.user?.setStatus("online");
         await client.user?.setActivity("Music", { type: ActivityType.Listening });
